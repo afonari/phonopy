@@ -170,7 +170,8 @@ def get_parser():
         write_dynamical_matrices=False,
         write_fc_format=None,
         write_force_constants=False,
-        write_mesh=True)
+        write_mesh=True,
+        atoms_todo=None)
 
     parser.add_argument(
         "--abinit", dest="abinit_mode", action="store_true",
@@ -520,6 +521,9 @@ def get_parser():
     parser.add_argument(
         "--xyz-projection", dest="xyz_projection", action="store_true",
         help="Project PDOS x, y, z directions in Cartesian coordinates")
+    parser.add_argument(
+        "--atoms-todo", dest="atoms_todo", nargs='+', type=int,
+        help="Atoms to displace")
     parser.add_argument(
         "conf_file", nargs='*',
         help="Phonopy configure file")

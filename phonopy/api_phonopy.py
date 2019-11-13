@@ -85,6 +85,7 @@ class Phonopy(object):
                  dynamical_matrix_decimals=None,
                  force_constants_decimals=None,
                  group_velocity_delta_q=None,
+                 atoms_todo=None,
                  symprec=1e-5,
                  is_symmetry=True,
                  calculator=None,
@@ -97,6 +98,7 @@ class Phonopy(object):
         self._calculator = calculator
         self._use_lapack_solver = use_lapack_solver
         self._log_level = log_level
+        self._atoms_todo = atoms_todo
 
         # Create supercell and primitive cell
         self._unitcell = PhonopyAtoms(atoms=unitcell)
@@ -663,6 +665,7 @@ class Phonopy(object):
                 is_plusminus=is_plusminus,
                 is_diagonal=is_diagonal,
                 is_trigonal=is_trigonal,
+                atoms_todo=self._atoms_todo,
                 log_level=self._log_level)
             displacement_dataset = directions_to_displacement_dataset(
                 displacement_directions,

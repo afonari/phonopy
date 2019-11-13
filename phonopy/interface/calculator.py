@@ -335,6 +335,7 @@ def create_FORCE_SETS(interface_mode,
                       force_sets_zero_mode=False,
                       disp_filename='disp.yaml',
                       force_sets_filename='FORCE_SETS',
+                      atoms_todo=None,
                       log_level=0):
     if log_level > 0:
         if interface_mode:
@@ -414,6 +415,10 @@ def create_FORCE_SETS(interface_mode,
         else:
             raise RuntimeError("FORCE_SETS could not be created.")
 
+        if atoms_todo is not None:
+            if dataset_type == 1:
+                disp_dataset = fix_dataset_type1(disp_dataset, atoms_todo)
+
         write_FORCE_SETS(disp_dataset, filename=force_sets_filename)
 
     if log_level > 0:
@@ -424,6 +429,40 @@ def create_FORCE_SETS(interface_mode,
 
     return 0
 
+
+def fix_dataset_type1(dataset, atoms_todo):
+
+    def get_forces(atom_num, displacement):
+        for disp in dataset['first_atoms']:
+            if (disp['number'] == atom_num and
+                    np.allclose(disp['displacement'], displacement)):
+                return disp['forces']
+
+        raise ValueError('Unknown values: %d %s' % (atom_num, disp))
+
+    num_atom = dataset['natom']
+    displacements = dataset['first_atoms']
+
+    atom_todo = atoms_todo[0]
+
+    disps = []
+    for disp in displacements:
+        if disp['number'] == atom_todo:
+            disps.append(disp['displacement'])
+
+    ret = {'natom': num_atom, 'first_atoms': []}
+    for natom in range(num_atom):
+        for idx, disp in enumerate(disps):
+            data = {'number': natom, 'displacement': disp}
+            forces = np.zeros((num_atom, 3))
+
+            if natom in atoms_todo:
+                forces = get_forces(natom, disp)
+
+            data['forces'] = forces
+            ret['first_atoms'].append(data)
+
+    return ret
 
 def get_force_sets(interface_mode,
                    num_atoms,

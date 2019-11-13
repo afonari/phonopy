@@ -75,6 +75,7 @@ def get_least_displacements(symmetry,
                             is_plusminus='auto',
                             is_diagonal=True,
                             is_trigonal=False,
+                            atoms_todo=None,
                             log_level=0):
     """Return a set of displacements
 
@@ -100,7 +101,9 @@ def get_least_displacements(symmetry,
     if log_level > 2:
         print("Site point symmetry:")
 
-    for atom_num in symmetry.get_independent_atoms():
+    atoms = symmetry.get_independent_atoms() if atoms_todo is None else atoms_todo
+
+    for atom_num in atoms:
         site_symmetry = symmetry.get_site_symmetry(atom_num)
 
         if log_level > 2:
