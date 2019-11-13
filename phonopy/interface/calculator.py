@@ -403,6 +403,7 @@ def create_FORCE_SETS(interface_mode,
     else:
         force_sets = []
 
+    print('dataset type: %d' % dataset_type)
     if force_sets:
         if force_sets_zero_mode:
             force_sets = _subtract_residual_forces(force_sets)
