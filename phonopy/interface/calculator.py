@@ -419,6 +419,8 @@ def create_FORCE_SETS(interface_mode,
         if atoms_todo is not None:
             if dataset_type == 1:
                 disp_dataset = fix_dataset_type1(disp_dataset, atoms_todo)
+            elif dataset_type == 2:
+                raise RuntimeError('Not implemented')
 
         write_FORCE_SETS(disp_dataset, filename=force_sets_filename)
 
@@ -444,11 +446,12 @@ def fix_dataset_type1(dataset, atoms_todo):
     num_atom = dataset['natom']
     displacements = dataset['first_atoms']
 
-    atom_todo = atoms_todo[0]
+    first_todo_atom = atoms_todo[0]
 
+    # Save displacements
     disps = []
     for disp in displacements:
-        if disp['number'] == atom_todo:
+        if disp['number'] == first_todo_atom:
             disps.append(disp['displacement'])
 
     ret = {'natom': num_atom, 'first_atoms': []}
