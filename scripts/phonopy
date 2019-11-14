@@ -420,6 +420,7 @@ if args.force_sets or args.force_sets_zero:
         print_error_message("Something wrong for parsing arguments.")
         sys.exit(0)
 
+    print('Zero force: %s' % force_sets_zero_mode)
     disp_filenames = files_exist(['phonopy_disp.yaml', 'disp.yaml'],
                                  log_level, is_any=True)
     if disp_filenames[0] == 'phonopy_disp.yaml':
